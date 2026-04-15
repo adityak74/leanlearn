@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -31,10 +32,10 @@ export const account = sqliteTable("account", {
     .notNull()
     .references(() => user.id),
   accessToken: text("access_token"),
-  refreshToken: text("refresh_token"),
+  refreshToken: text("refreshToken"),
   idToken: text("id_token"),
   accessTokenExpiresAt: integer("access_token_expires_at", { mode: "timestamp" }),
-  refreshTokenExpiresAt: integer("refresh_token_expires_at", { mode: "timestamp" }),
+  refreshTokenExpiresAt: integer("refreshTokenExpiresAt", { mode: "timestamp" }),
   scope: text("scope"),
   password: text("password"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
@@ -84,3 +85,22 @@ export const activities = sqliteTable("activities", {
   sortOrder: integer("sort_order").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
+
+export const coursesRelations = relations(courses, ({ many }) => ({
+  chapters: many(chapters),
+}));
+
+export const chaptersRelations = relations(chapters, ({ one, many }) => ({
+  course: one(courses, {
+    fields: [chapters.courseId],
+    references: [courses.id],
+  }),
+  activities: many(activities),
+}));
+
+export const activitiesRelations = relations(activities, ({ one }) => ({
+  chapter: one(chapters, {
+    fields: [activities.chapterId],
+    references: [chapters.id],
+  }),
+}));
