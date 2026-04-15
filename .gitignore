@@ -1,0 +1,18 @@
+# Build outputs
+build
+dist
+.react-router
+node_modules
+.cache
+
+# Cloudflare
+.wrangler
+.dev.vars
+
+# Local env
+.env
+.env.local
+
+# System files
+.DS_Store
+Thumbs.db
