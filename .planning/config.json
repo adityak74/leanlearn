@@ -1,0 +1,14 @@
+{
+  "name": "leanlearn",
+  "workflow": "new-project",
+  "stack": {
+    "backend": "Hono/Cloudflare Workers",
+    "frontend": "Vanilla CSS/React",
+    "database": "Cloudflare D1",
+    "auth": "Better Auth (Google)"
+  },
+  "preferences": {
+    "styling": "Vanilla CSS",
+    "deployment": "Cloudflare Pages/Workers"
+  }
+}
