@@ -13,7 +13,12 @@ type Bindings = {
   GOOGLE_CLIENT_SECRET: string;
 };
 
-const app = new Hono<{ Bindings: Bindings }>();
+type Variables = {
+  user: any;
+  session: any;
+};
+
+const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 // Better Auth factory
 export const getAuth = (c: { env: Bindings; executionCtx: ExecutionContext }) => {
@@ -38,6 +43,21 @@ export const getAuth = (c: { env: Bindings; executionCtx: ExecutionContext }) =>
   });
 };
 
+// Session Middleware
+app.use("*", async (c, next) => {
+  const auth = getAuth(c);
+  const session = await auth.api.getSession({
+    headers: c.req.raw.headers,
+  });
+
+  if (session) {
+    c.set("user", session.user);
+    c.set("session", session.session);
+  }
+
+  await next();
+});
+
 // Better Auth handler
 app.on(["POST", "GET"], "/api/auth/*", (c) => {
   const auth = getAuth(c);
@@ -54,6 +74,11 @@ app.use(
     // @ts-expect-error - virtual module
     build: () => import("virtual:react-router/server-build"),
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
+    getLoadContext: (c) => ({
+      user: c.get("user"),
+      session: c.get("session"),
+      env: c.env,
+    }),
   })
 );
 
