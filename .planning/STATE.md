@@ -1,20 +1,21 @@
 # Project State
 
-## Current Phase: 02 - Learning Architecture
+## Current Phase: 03 - Progress & Persistence
 ## Status: Ready for Research & Planning
-## Goal: Define the course structure and initial content model in D1.
+## Goal: Implement activity completion tracking and course progress calculation.
 
 ## Completed Phases
 - [x] Phase 01: Foundation (Cloudflare-Native Core)
+- [x] Phase 02: Learning Architecture (Data Model & Seeding)
 
-## Completed Tasks (Phase 01)
-- [x] Wave 1: Scaffolding (React Router v7 + Hono)
-- [x] Wave 2: Auth Backend (Better Auth + D1 + Drizzle)
-- [x] Wave 3: Auth UI & Middleware (Login + Dashboard)
+## Completed Tasks (Phase 02)
+- [x] Wave 1: Schema & Seeding (Courses, Chapters, Activities)
+- [x] Wave 2: Course API & Dashboard List
+- [x] Wave 3: Course View (Sidebar & Content)
 
 ## Active Tasks
-- [ ] Phase 2 Research: Learning data model (LearnHouse inspired)
-- [ ] Phase 2 Planning: Courses, Chapters, Activities schema
+- [ ] Phase 3 Research: Completion tracking logic
+- [ ] Phase 3 Planning: Progress API and persistence
 
 ## Next Step
-Run `/gsd-plan-phase 2` to start the Learning Architecture phase.
+Run `/gsd-plan-phase 3` to start the Progress & Persistence phase.
