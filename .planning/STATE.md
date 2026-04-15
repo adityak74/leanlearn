@@ -1,16 +1,20 @@
 # Project State
 
-## Current Phase: 01 - Foundation
-## Status: Planned & Verified
-## Goal: Establish the Cloudflare-native core with Auth and D1.
+## Current Phase: 02 - Learning Architecture
+## Status: Ready for Research & Planning
+## Goal: Define the course structure and initial content model in D1.
+
+## Completed Phases
+- [x] Phase 01: Foundation (Cloudflare-Native Core)
+
+## Completed Tasks (Phase 01)
+- [x] Wave 1: Scaffolding (React Router v7 + Hono)
+- [x] Wave 2: Auth Backend (Better Auth + D1 + Drizzle)
+- [x] Wave 3: Auth UI & Middleware (Login + Dashboard)
 
 ## Active Tasks
-- [x] Phase 1 Research (.planning/phases/01-foundation/01-RESEARCH.md)
-- [x] Phase 1 Planning (.planning/phases/01-foundation/01-01-PLAN.md, etc.)
-- [x] Phase 1 Verification (Verified by gsd-plan-checker)
-- [ ] Execute Wave 1: Scaffolding
-- [ ] Execute Wave 2: Auth Backend
-- [ ] Execute Wave 3: Auth UI & Middleware
+- [ ] Phase 2 Research: Learning data model (LearnHouse inspired)
+- [ ] Phase 2 Planning: Courses, Chapters, Activities schema
 
 ## Next Step
-Run `/gsd-execute-phase 1` to start the execution of Phase 1.
+Run `/gsd-plan-phase 2` to start the Learning Architecture phase.
