@@ -1,7 +1,7 @@
 # Project State
 
 ## Current Phase: 03 - Progress & Persistence
-## Status: Ready for Research & Planning
+## Status: Planned
 ## Goal: Implement activity completion tracking and course progress calculation.
 
 ## Completed Phases
@@ -14,8 +14,10 @@
 - [x] Wave 3: Course View (Sidebar & Content)
 
 ## Active Tasks
-- [ ] Phase 3 Research: Completion tracking logic
-- [ ] Phase 3 Planning: Progress API and persistence
+- [x] Phase 3 Planning (.planning/phases/03-progress-persistence/03-01-PLAN.md, etc.)
+- [ ] Execute Wave 1: Schema & DB Layer
+- [ ] Execute Wave 2: API & Progress Logic
+- [ ] Execute Wave 3: UI & Interaction
 
 ## Next Step
-Run `/gsd-plan-phase 3` to start the Progress & Persistence phase.
+Run `/gsd-execute-phase 3` to start the execution of Phase 3.
