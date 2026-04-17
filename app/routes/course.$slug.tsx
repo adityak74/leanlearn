@@ -163,6 +163,11 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     throw new Response("Course Not Found", { status: 404 });
   }
 
+  const certificate = await db.query.certificates.findFirst({
+    where: (c, { and, eq }) =>
+      and(eq(c.userId, user.id), eq(c.courseId, course.id)),
+  });
+
   const progressPercent = (course as any).progresses?.[0]?.progressPercent ?? 0;
   
   const processedChapters = course.chapters.map((chapter: any) => ({
@@ -182,12 +187,13 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
       ...course, 
       chapters: processedChapters,
       progressPercent 
-    } 
+    },
+    certificate
   };
 }
 
 export default function CourseView() {
-  const { course } = useLoaderData<typeof loader>();
+  const { course, certificate } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const fetcher = useFetcher();
   
@@ -222,6 +228,30 @@ export default function CourseView() {
               }} 
             />
           </div>
+          
+          {course.progressPercent === 100 && certificate && (
+            <div style={{ marginTop: "1.5rem" }}>
+              <Link
+                to={`/certificate/${certificate.id}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "block",
+                  padding: "0.75rem",
+                  backgroundColor: "#10b981",
+                  color: "white",
+                  textDecoration: "none",
+                  borderRadius: "6px",
+                  textAlign: "center",
+                  fontSize: "0.9rem",
+                  fontWeight: "600",
+                  boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)"
+                }}
+              >
+                🎓 View Certificate
+              </Link>
+            </div>
+          )}
         </div>
         
         <div style={{ flex: 1 }}>

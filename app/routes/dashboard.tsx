@@ -21,13 +21,20 @@ export async function loader({ context }: LoaderFunctionArgs) {
     },
   });
 
+  const allCertificates = await db.query.certificates.findMany({
+    where: (c, { eq }) => eq(c.userId, user.id),
+  });
+
   const courses = allCourses.map((course: any) => {
     const progress = course.progresses?.[0];
     const { progresses, ...courseData } = course;
+    const certificate = allCertificates.find((c: any) => c.courseId === course.id);
+    
     return {
       ...courseData,
       progressPercent: progress?.progressPercent ?? 0,
       completedAt: progress?.completedAt ?? null,
+      certificateId: certificate?.id || null,
     };
   });
 
@@ -92,21 +99,50 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <Link 
-                  to={`/course/${course.slug}`}
-                  style={{ 
-                    display: "inline-block", 
-                    marginTop: "1rem", 
-                    padding: "0.5rem 1rem", 
-                    backgroundColor: "#0070f3", 
-                    color: "white", 
-                    textDecoration: "none", 
-                    borderRadius: "5px",
-                    textAlign: "center"
-                  }}
-                >
-                  {course.progressPercent > 0 ? (course.progressPercent === 100 ? "Review Course" : "Continue Course") : "Start Course"}
-                </Link>
+                <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem" }}>
+                  <Link 
+                    to={`/course/${course.slug}`}
+                    style={{ 
+                      flex: 1,
+                      padding: "0.6rem 1rem", 
+                      backgroundColor: course.progressPercent === 100 ? "#f3f4f6" : "#0070f3", 
+                      color: course.progressPercent === 100 ? "#374151" : "white", 
+                      textDecoration: "none", 
+                      borderRadius: "6px",
+                      textAlign: "center",
+                      fontSize: "0.9rem",
+                      fontWeight: "500",
+                      border: course.progressPercent === 100 ? "1px solid #d1d5db" : "none"
+                    }}
+                  >
+                    {course.progressPercent > 0 ? (course.progressPercent === 100 ? "Review" : "Continue") : "Start Course"}
+                  </Link>
+
+                  {course.progressPercent === 100 && course.certificateId && (
+                    <Link
+                      to={`/certificate/${course.certificateId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        flex: 1,
+                        padding: "0.6rem 1rem",
+                        backgroundColor: "#10b981",
+                        color: "white",
+                        textDecoration: "none",
+                        borderRadius: "6px",
+                        textAlign: "center",
+                        fontSize: "0.9rem",
+                        fontWeight: "500",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.25rem"
+                      }}
+                    >
+                      🎓 Certificate
+                    </Link>
+                  )}
+                </div>
               </div>
             ))}
           </div>
