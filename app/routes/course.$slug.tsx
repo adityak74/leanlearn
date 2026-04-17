@@ -108,6 +108,23 @@ export async function action({ request, context }: ActionFunctionArgs) {
     });
   }
 
+  // 5. Issue certificate if progress is 100%
+  if (progressPercent === 100) {
+    const existingCertificate = await db.query.certificates.findFirst({
+      where: (c, { and, eq }) =>
+        and(eq(c.userId, user.id), eq(c.courseId, courseId)),
+    });
+
+    if (!existingCertificate) {
+      await db.insert(schema.certificates).values({
+        id: crypto.randomUUID(),
+        userId: user.id,
+        courseId: courseId,
+        issuedAt: new Date(),
+      });
+    }
+  }
+
   return { success: true, progressPercent };
 }
 
