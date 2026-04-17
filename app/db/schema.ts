@@ -32,10 +32,10 @@ export const account = sqliteTable("account", {
     .notNull()
     .references(() => user.id),
   accessToken: text("access_token"),
-  refreshToken: text("refreshToken"),
+  refreshToken: text("refresh_token"),
   idToken: text("id_token"),
   accessTokenExpiresAt: integer("access_token_expires_at", { mode: "timestamp" }),
-  refreshTokenExpiresAt: integer("refreshTokenExpiresAt", { mode: "timestamp" }),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at", { mode: "timestamp" }),
   scope: text("scope"),
   password: text("password"),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
@@ -86,8 +86,38 @@ export const activities = sqliteTable("activities", {
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
 
+export const activityCompletion = sqliteTable("activity_completion", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  activityId: text("activity_id")
+    .notNull()
+    .references(() => activities.id, { onDelete: "cascade" }),
+  completedAt: integer("completed_at", { mode: "timestamp" }).notNull(),
+});
+
+export const courseProgress = sqliteTable("course_progress", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  courseId: text("course_id")
+    .notNull()
+    .references(() => courses.id, { onDelete: "cascade" }),
+  progressPercent: integer("progress_percent").notNull().default(0),
+  completedAt: integer("completed_at", { mode: "timestamp" }),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const userRelations = relations(user, ({ many }) => ({
+  activityCompletions: many(activityCompletion),
+  courseProgresses: many(courseProgress),
+}));
+
 export const coursesRelations = relations(courses, ({ many }) => ({
   chapters: many(chapters),
+  progresses: many(courseProgress),
 }));
 
 export const chaptersRelations = relations(chapters, ({ one, many }) => ({
@@ -98,9 +128,35 @@ export const chaptersRelations = relations(chapters, ({ one, many }) => ({
   activities: many(activities),
 }));
 
-export const activitiesRelations = relations(activities, ({ one }) => ({
+export const activitiesRelations = relations(activities, ({ one, many }) => ({
   chapter: one(chapters, {
     fields: [activities.chapterId],
     references: [chapters.id],
+  }),
+  completions: many(activityCompletion),
+}));
+
+export const activityCompletionRelations = relations(
+  activityCompletion,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [activityCompletion.userId],
+      references: [user.id],
+    }),
+    activity: one(activities, {
+      fields: [activityCompletion.activityId],
+      references: [activities.id],
+    }),
+  })
+);
+
+export const courseProgressRelations = relations(courseProgress, ({ one }) => ({
+  user: one(user, {
+    fields: [courseProgress.userId],
+    references: [user.id],
+  }),
+  course: one(courses, {
+    fields: [courseProgress.courseId],
+    references: [courses.id],
   }),
 }));
