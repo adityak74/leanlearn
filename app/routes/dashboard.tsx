@@ -12,8 +12,23 @@ export async function loader({ context }: LoaderFunctionArgs) {
   }
 
   const db = drizzle(env.DB, { schema });
-  const courses = await db.query.courses.findMany({
+  const allCourses = await db.query.courses.findMany({
     where: (courses, { eq }) => eq(courses.published, true),
+    with: {
+      progresses: user ? {
+        where: (progress, { eq }) => eq(progress.userId, user.id),
+      } : undefined,
+    },
+  });
+
+  const courses = allCourses.map((course: any) => {
+    const progress = course.progresses?.[0];
+    const { progresses, ...courseData } = course;
+    return {
+      ...courseData,
+      progressPercent: progress?.progressPercent ?? 0,
+      completedAt: progress?.completedAt ?? null,
+    };
   });
 
   return { user, courses };
@@ -56,9 +71,27 @@ export default function Dashboard() {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem", marginTop: "1rem" }}>
             {courses.map((course: any) => (
-              <div key={course.id} style={{ border: "1px solid #ddd", padding: "1.5rem", borderRadius: "8px" }}>
+              <div key={course.id} style={{ border: "1px solid #ddd", padding: "1.5rem", borderRadius: "8px", display: "flex", flexDirection: "column" }}>
                 <h4>{course.title}</h4>
-                <p style={{ fontSize: "0.9rem", color: "#666" }}>{course.description}</p>
+                <p style={{ fontSize: "0.9rem", color: "#666", flex: 1 }}>{course.description}</p>
+                
+                <div style={{ marginTop: "1rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem" }}>
+                    <span>Progress</span>
+                    <span>{course.progressPercent}%</span>
+                  </div>
+                  <div style={{ width: "100%", height: "8px", backgroundColor: "#eee", borderRadius: "4px", overflow: "hidden" }}>
+                    <div 
+                      style={{ 
+                        width: `${course.progressPercent}%`, 
+                        height: "100%", 
+                        backgroundColor: course.progressPercent === 100 ? "#10b981" : "#0070f3",
+                        transition: "width 0.3s ease"
+                      }} 
+                    />
+                  </div>
+                </div>
+
                 <Link 
                   to={`/course/${course.slug}`}
                   style={{ 
@@ -68,10 +101,11 @@ export default function Dashboard() {
                     backgroundColor: "#0070f3", 
                     color: "white", 
                     textDecoration: "none", 
-                    borderRadius: "5px" 
+                    borderRadius: "5px",
+                    textAlign: "center"
                   }}
                 >
-                  Start Course
+                  {course.progressPercent > 0 ? (course.progressPercent === 100 ? "Review Course" : "Continue Course") : "Start Course"}
                 </Link>
               </div>
             ))}
