@@ -56,6 +56,38 @@ export default function CertificatePage() {
       padding: "2rem",
       backgroundColor: "#f9fafb"
     }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          body {
+            margin: 0;
+            padding: 0;
+            background-color: white !important;
+          }
+          .certificate-container {
+            padding: 0 !important;
+            background-color: white !important;
+            min-height: auto !important;
+            justify-content: center !important;
+          }
+          .certificate-card {
+            box-shadow: none !important;
+            border: 10px solid #1e293b !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: none !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+          @page {
+            size: A4 landscape;
+            margin: 0;
+          }
+        }
+      `}} />
+      
       <div className="certificate-card" style={{
         width: "100%",
         maxWidth: "800px",
