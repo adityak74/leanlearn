@@ -110,14 +110,27 @@ export const courseProgress = sqliteTable("course_progress", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
+export const certificates = sqliteTable("certificates", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  courseId: text("course_id")
+    .notNull()
+    .references(() => courses.id, { onDelete: "cascade" }),
+  issuedAt: integer("issued_at", { mode: "timestamp" }).notNull(),
+});
+
 export const userRelations = relations(user, ({ many }) => ({
   activityCompletions: many(activityCompletion),
   courseProgresses: many(courseProgress),
+  certificates: many(certificates),
 }));
 
 export const coursesRelations = relations(courses, ({ many }) => ({
   chapters: many(chapters),
   progresses: many(courseProgress),
+  certificates: many(certificates),
 }));
 
 export const chaptersRelations = relations(chapters, ({ one, many }) => ({
@@ -157,6 +170,17 @@ export const courseProgressRelations = relations(courseProgress, ({ one }) => ({
   }),
   course: one(courses, {
     fields: [courseProgress.courseId],
+    references: [courses.id],
+  }),
+}));
+
+export const certificatesRelations = relations(certificates, ({ one }) => ({
+  user: one(user, {
+    fields: [certificates.userId],
+    references: [user.id],
+  }),
+  course: one(courses, {
+    fields: [certificates.courseId],
     references: [courses.id],
   }),
 }));
