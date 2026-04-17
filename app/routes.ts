@@ -5,4 +5,5 @@ export default [
   route("login", "routes/login.tsx"),
   route("dashboard", "routes/dashboard.tsx"),
   route("course/:slug", "routes/course.$slug.tsx"),
+  route("certificate/:id", "routes/certificate.$id.tsx"),
 ] satisfies RouteConfig;
