@@ -26,8 +26,8 @@
 **Goal:** Reaching 100% unlocks a printable certificate with learner metadata.
 
 **Plans:** 3 plans
-- [ ] 04-01-PLAN.md — Certification Schema & Issuance Logic.
-- [ ] 04-02-PLAN.md — Certificate View & Print Styles.
+- [x] 04-01-PLAN.md — Certification Schema & Issuance Logic.
+- [x] 04-02-PLAN.md — Certificate View & Print Styles.
 - [ ] 04-03-PLAN.md — UI Integration.
 
 **Success Criteria:** Reaching 100% unlocks a printable certificate with learner metadata.

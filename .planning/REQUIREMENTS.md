@@ -21,7 +21,7 @@
 ## 4. Certification
 - **ID:** CERT
 - [ ] **REQ-CERT-01:** Automated issuance at 100% progress.
-- [ ] **REQ-CERT-02:** Printable HTML certificate view.
+- [x] **REQ-CERT-02:** Printable HTML certificate view.
 
 ## 5. User Interface
 - **ID:** UI
