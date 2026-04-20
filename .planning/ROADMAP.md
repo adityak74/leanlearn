@@ -28,12 +28,16 @@
 **Plans:** 3 plans
 - [x] 04-01-PLAN.md — Certification Schema & Issuance Logic.
 - [x] 04-02-PLAN.md — Certificate View & Print Styles.
-- [ ] 04-03-PLAN.md — UI Integration.
+- [x] 04-03-PLAN.md — UI Integration.
 
 **Success Criteria:** Reaching 100% unlocks a printable certificate with learner metadata.
 
 ## Phase 5: Polish & Deployment
-- [ ] Learner Profile page showing course progress and earned certificates.
-- [ ] Finalize `wrangler.toml` for Cloudflare Pages/Workers deployment.
-- [ ] Performance audit and CSS polish for the "Lean" experience.
-- [ ] **Success Criteria:** Application is live on Cloudflare with functional auth and certificates.
+**Goal:** Finalize profile page, deployment config, and performance audit.
+
+**Plans:** 3 plans
+- [ ] 05-01-PLAN.md — Profile Page & "Lean" UI System.
+- [ ] 05-02-PLAN.md — Quality Assurance & Performance.
+- [ ] 05-03-PLAN.md — Cloudflare Production Deployment.
+
+**Success Criteria:** Application is live on Cloudflare with functional auth and certificates.
