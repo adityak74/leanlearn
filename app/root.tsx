@@ -7,6 +7,8 @@ import {
 } from "react-router";
 import type { LinksFunction } from "react-router";
 
+import "./styles/app.css";
+
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {

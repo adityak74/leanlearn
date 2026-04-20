@@ -258,6 +258,12 @@ app.post("/api/activity/:id/complete", async (c) => {
 // API routes
 app.get("/api/health", (c) => c.json({ status: "ok" }));
 
+// Static assets caching middleware
+app.use("/assets/*", async (c, next) => {
+  await next();
+  c.header("Cache-Control", "public, max-age=31536000, immutable");
+});
+
 // The React Router handler
 app.use(
   "*",

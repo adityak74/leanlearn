@@ -36,8 +36,8 @@
 **Goal:** Finalize profile page, deployment config, and performance audit.
 
 **Plans:** 3 plans
-- [ ] 05-01-PLAN.md — Profile Page & "Lean" UI System.
-- [ ] 05-02-PLAN.md — Quality Assurance & Performance.
-- [ ] 05-03-PLAN.md — Cloudflare Production Deployment.
+- [x] 05-01-PLAN.md — Profile Page & "Lean" UI System.
+- [x] 05-02-PLAN.md — Quality Assurance & Performance.
+- [x] 05-03-PLAN.md — Cloudflare Production Deployment.
 
 **Success Criteria:** Application is live on Cloudflare with functional auth and certificates.

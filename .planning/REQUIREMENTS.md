@@ -20,7 +20,7 @@
 
 ## 4. Certification
 - **ID:** CERT
-- [ ] **REQ-CERT-01:** Automated issuance at 100% progress.
+- [x] **REQ-CERT-01:** Automated issuance at 100% progress.
 - [x] **REQ-CERT-02:** Printable HTML certificate view.
 
 ## 5. User Interface
@@ -28,7 +28,7 @@
 - [x] **REQ-UI-01:** Login Screen with Google button.
 - [x] **REQ-UI-02:** Dashboard with course progress.
 - [x] **REQ-UI-03:** Sidebar-based Course View.
-- [ ] **REQ-UI-04:** Conditional "View Certificate" button.
+- [x] **REQ-UI-04:** Conditional "View Certificate" button.
 
 ## 6. Technical Stack
 - **ID:** STACK

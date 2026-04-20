@@ -8,6 +8,8 @@
     "build": "react-router build",
     "start": "wrangler pages dev ./build/client",
     "typecheck": "react-router typecheck",
+    "test": "vitest run",
+    "deploy": "npm run build && wrangler pages deploy ./build/client",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply DB --local"
   },
@@ -33,6 +35,7 @@
     "typescript": "^5.9.3",
     "vite": "^5.4.21",
     "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^2.1.8",
     "wrangler": "^3.114.17"
   },
   "version": "1.0.0",
