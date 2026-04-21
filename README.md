@@ -24,6 +24,14 @@
   <br>
   <em>Intuitive Student Dashboard</em>
   <br><br>
+  <img src="public/screenshots/course_complete.png" alt="Course Complete" width="800">
+  <br>
+  <em>Course Completion View</em>
+  <br><br>
+  <img src="public/screenshots/certificate.png" alt="Certificate" width="800">
+  <br>
+  <em>Generated Digital Certificate</em>
+  <br><br>
   <img src="public/screenshots/sign_in.png" alt="Sign In" width="400">
   <br>
   <em>Secure Authentication</em>
