@@ -112,7 +112,7 @@ npm run deploy
 
 ## 📄 License
 
-Distributed under the ISC License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE.md` for more information.
 
 ---
 
