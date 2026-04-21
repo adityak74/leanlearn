@@ -15,6 +15,20 @@
       "when": 1776233414381,
       "tag": "0001_groovy_millenium_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1776354974363,
+      "tag": "0002_solid_lethal_legion",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1776394065506,
+      "tag": "0003_lovely_stingray",
+      "breakpoints": true
     }
   ]
 }
