@@ -32,6 +32,10 @@
   <br>
   <em>Generated Digital Certificate</em>
   <br><br>
+  <img src="public/screenshots/user_profile.png" alt="User Profile" width="800">
+  <br>
+  <em>Detailed Learner Profile & Progress</em>
+  <br><br>
   <img src="public/screenshots/sign_in.png" alt="Sign In" width="400">
   <br>
   <em>Secure Authentication</em>
