@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="leanlearn_logo.png" alt="leanlearn Logo" width="200">
+</div>
+
 # 🎓 leanlearn
 
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
