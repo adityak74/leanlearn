@@ -46,5 +46,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "Modern, high-performance LMS built with React Router v7 and a Cloudflare-native stack (Pages, D1, Workers).",
 }

@@ -58,9 +58,21 @@ For a faster "Lean" experience, local development uses a local `dev.db` SQLite f
 ---
 
 ## 4. Production Workflow (Cloudflare D1)
-In production, the app uses Cloudflare D1 and Workers Assets.
+In production, the app uses Cloudflare D1 and Pages.
 
-### Database Initialization
+### One-Click Deploy
+The fastest way to deploy is using the Cloudflare Deploy button:
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/adityak74/leanlearn)
+
+This will:
+1. Fork the repository.
+2. Setup a Cloudflare Pages project.
+3. Provision a Cloudflare D1 database.
+
+### Manual Database Initialization
+If you prefer manual control:
+
 1. **Generate Migrations:**
    ```bash
    npm run db:generate
@@ -82,7 +94,7 @@ In production, the app uses Cloudflare D1 and Workers Assets.
 
 ### Deployment
 1. **Set Environment Variables:**
-   Go to your Cloudflare Pages Dashboard > Settings > Variables and add your production secrets.
+   Go to your Cloudflare Pages Dashboard > Settings > Environment Variables and add your production secrets.
    
 2. **Deploy:**
    ```bash
@@ -92,6 +104,7 @@ In production, the app uses Cloudflare D1 and Workers Assets.
 ---
 
 ## 5. Architecture Notes
+- **Cloudflare-Native Stack:** The application is built to run entirely on the Cloudflare edge. It utilizes **Cloudflare Pages** for hosting, **Cloudflare D1** for low-latency relational data, and **Cloudflare Workers** (via React Router's single-fetch) for server-side logic.
 - **Database Selection:** The app automatically switches between Cloudflare D1 and Local SQLite via `app/db/db.server.ts`. It detects the presence of the D1 binding and falls back to `dev.db` if unavailable.
 - **Authentication:** Better Auth handles sessions. Ensure your `BETTER_AUTH_URL` matches the environment you are currently in.
 - **Styling:** Global styles are managed in `app/styles/app.css` and integrated via `app/root.tsx`.

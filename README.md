@@ -5,8 +5,9 @@
 [![Cloudflare Pages](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Pages-orange)](https://pages.cloudflare.com/)
 [![React Router](https://img.shields.io/badge/React%20Router-v7-red)](https://reactrouter.com/)
 [![Better Auth](https://img.shields.io/badge/Auth-Better%20Auth-black)](https://www.better-auth.com/)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/adityak74/leanlearn)
 
-**leanlearn** is a modern, high-performance Learning Management System (LMS) built for speed and simplicity. It leverages a Cloudflare-native stack to provide a "Lean" experience for both learners and developers.
+**leanlearn** is a modern, high-performance Learning Management System (LMS) built for speed and simplicity. It leverages a Cloudflare-native stack (Pages, D1, Workers) to provide a "Lean" experience for both learners and developers.
 
 [Explore the Docs](SETUP.md) · [Report Bug](https://github.com/adityak74/leanlearn/issues) · [Request Feature](https://github.com/adityak74/leanlearn/issues)
 
@@ -97,10 +98,17 @@ npm test
 
 ## ☁️ Deployment
 
-Deploy to Cloudflare Pages in one command:
+### One-Click Deploy
+You can deploy this entire stack (including D1 database setup) directly to Cloudflare using the button below:
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/adityak74/leanlearn)
+
+### Manual Deployment
+Deploy to Cloudflare Pages manually using the Wrangler CLI:
 ```bash
 npm run deploy
 ```
+*Note: Ensure you have your D1 database and KV namespaces configured in `wrangler.jsonc` before manual deployment.*
 
 ## 📄 License
 
