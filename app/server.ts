@@ -1,10 +1,19 @@
 import { Hono } from "hono";
-import { reactRouter } from "hono-react-router-adapter";
+import { createRequestHandler } from "react-router";
+import { createMiddleware } from "hono/factory";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { drizzle } from "drizzle-orm/d1";
+import { drizzle as drizzleD1 } from "drizzle-orm/d1";
+import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
 import { eq, and, sql } from "drizzle-orm";
 import * as schema from "./db/schema";
+import * as dotenv from "dotenv";
+
+// Load .dev.vars in development
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: ".dev.vars" });
+}
 
 type Bindings = {
   DB: D1Database;
@@ -12,6 +21,7 @@ type Bindings = {
   BETTER_AUTH_URL: string;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
+  NODE_ENV?: string;
 };
 
 type Variables = {
@@ -21,24 +31,38 @@ type Variables = {
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
+import { getDb } from "./db/db.server";
+import { serveStatic } from "@hono/node-server/serve-static";
+
+// Helper to get env variable with fallback
+const getEnv = (c: { env: Bindings }, key: keyof Bindings): any => {
+  return c.env?.[key] || (process.env as any)[key];
+};
+
 // Better Auth factory
 export const getAuth = (c: { env: Bindings; executionCtx: ExecutionContext }) => {
+  const db = getDb(c.env);
+  
   return betterAuth({
-    database: drizzleAdapter(drizzle(c.env.DB), {
+    database: drizzleAdapter(db, {
       provider: "sqlite",
       schema: schema,
     }),
-    secret: c.env.BETTER_AUTH_SECRET,
-    baseURL: c.env.BETTER_AUTH_URL,
+    secret: getEnv(c, "BETTER_AUTH_SECRET"),
+    baseURL: getEnv(c, "BETTER_AUTH_URL"),
     socialProviders: {
       google: {
-        clientId: c.env.GOOGLE_CLIENT_ID,
-        clientSecret: c.env.GOOGLE_CLIENT_SECRET,
+        clientId: getEnv(c, "GOOGLE_CLIENT_ID"),
+        clientSecret: getEnv(c, "GOOGLE_CLIENT_SECRET"),
       },
     },
     advanced: {
-      runInBackground: (fn) => {
-        c.executionCtx.waitUntil(fn());
+      runInBackground: (fn: any) => {
+        if (c.executionCtx?.waitUntil) {
+          c.executionCtx.waitUntil(fn());
+        } else {
+          fn();
+        }
       },
     },
   });
@@ -68,7 +92,7 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 // Course API routes
 app.get("/api/me/courses", async (c) => {
   const user = c.get("user");
-  const db = drizzle(c.env.DB, { schema });
+  const db = getDb(c);
   
   const allCourses = await db.query.courses.findMany({
     where: (courses, { eq }) => eq(courses.published, true),
@@ -80,8 +104,8 @@ app.get("/api/me/courses", async (c) => {
   });
 
   const coursesWithProgress = allCourses.map((course: any) => {
-    const progress = course.progresses?.[0];
-    const { progresses, ...courseData } = course;
+    const progress = (course as any).progresses?.[0];
+    const { progresses, ...courseData } = course as any;
     return {
       ...courseData,
       progressPercent: progress?.progressPercent ?? 0,
@@ -95,7 +119,7 @@ app.get("/api/me/courses", async (c) => {
 app.get("/api/course/:slug", async (c) => {
   const user = c.get("user");
   const slug = c.req.param("slug");
-  const db = drizzle(c.env.DB, { schema });
+  const db = getDb(c);
 
   const course = await db.query.courses.findFirst({
     where: (courses, { eq }) => eq(courses.slug, slug),
@@ -127,7 +151,7 @@ app.get("/api/course/:slug", async (c) => {
   const chaptersWithCompletion = course.chapters.map((chapter: any) => ({
     ...chapter,
     activities: chapter.activities.map((activity: any) => {
-      const { completions, ...activityData } = activity;
+      const { completions, ...activityData } = activity as any;
       return {
         ...activityData,
         completed: completions && completions.length > 0,
@@ -152,7 +176,7 @@ app.post("/api/activity/:id/complete", async (c) => {
   }
 
   const activityId = c.req.param("id");
-  const db = drizzle(c.env.DB, { schema });
+  const db = getDb(c);
 
   // 1. Find the activity and its course
   const activity = await db.query.activities.findFirst({
@@ -184,7 +208,6 @@ app.post("/api/activity/:id/complete", async (c) => {
   }
 
   // 3. Calculate progress
-  // Fetch all required activities for the course
   const allRequiredActivities = await db
     .select({ id: schema.activities.id })
     .from(schema.activities)
@@ -201,7 +224,6 @@ app.post("/api/activity/:id/complete", async (c) => {
 
   const totalRequired = allRequiredActivities.length;
 
-  // Fetch completed required activities for this user/course
   const completedRequiredActivities = await db
     .select({ id: schema.activities.id })
     .from(schema.activityCompletion)
@@ -264,19 +286,23 @@ app.use("/assets/*", async (c, next) => {
   c.header("Cache-Control", "public, max-age=31536000, immutable");
 });
 
-// The React Router handler
-app.use(
-  "*",
-  reactRouter({
-    // @ts-expect-error - virtual module
-    build: () => import("virtual:react-router/server-build"),
-    mode: process.env.NODE_ENV === "production" ? "production" : "development",
-    getLoadContext: (c) => ({
-      user: c.get("user"),
-      session: c.get("session"),
-      env: c.env,
-    }),
-  })
-);
+// Serve static files
+if (process.env.NODE_ENV === "production") {
+  app.use("/*", serveStatic({ root: "./build/client" }));
+}
+
+// The React Router handler implemented as the catch-all
+app.all("*", async (c) => {
+  const build = await import("virtual:react-router/server-build");
+  const mode = c.env?.NODE_ENV || "development";
+  const handler = createRequestHandler(build, mode);
+  const loadContext = {
+    user: c.get("user"),
+    session: c.get("session"),
+    env: c.env || {},
+  };
+  
+  return handler(c.req.raw, loadContext);
+});
 
 export default app;

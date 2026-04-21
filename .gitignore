@@ -16,3 +16,4 @@ node_modules
 # System files
 .DS_Store
 Thumbs.db
+\n# Local DB\ndev.db

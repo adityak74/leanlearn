@@ -1,6 +1,6 @@
 import { redirect, useLoaderData, useSearchParams, Link, useFetcher } from "react-router";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
-import { drizzle } from "drizzle-orm/d1";
+import { getDb } from "~/db/db.server";
 import { eq, and } from "drizzle-orm";
 import * as schema from "~/db/schema";
 
@@ -13,7 +13,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
   
   if (!activityId) return { error: "Missing activityId" };
 
-  const db = drizzle(env.DB, { schema });
+  const db = getDb(env);
 
   // 1. Find the activity and its course
   const activity = await db.query.activities.findFirst({
@@ -136,7 +136,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     return redirect("/login");
   }
 
-  const db = drizzle(env.DB, { schema });
+  const db = getDb(env);
   const course = await db.query.courses.findFirst({
     where: (courses, { eq }) => eq(courses.slug, slug as string),
     with: {

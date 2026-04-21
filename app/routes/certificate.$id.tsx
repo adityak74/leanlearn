@@ -1,6 +1,6 @@
 import { redirect, useLoaderData } from "react-router";
 import type { LoaderFunctionArgs } from "react-router";
-import { drizzle } from "drizzle-orm/d1";
+import { getDb } from "~/db/db.server";
 import { eq } from "drizzle-orm";
 import * as schema from "~/db/schema";
 
@@ -16,7 +16,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const db = drizzle(env.DB, { schema });
+  const db = getDb(env);
   
   const certificate = await db.query.certificates.findFirst({
     where: eq(schema.certificates.id, id),

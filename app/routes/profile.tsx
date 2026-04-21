@@ -1,6 +1,6 @@
 import { redirect, useLoaderData, Link } from "react-router";
 import type { LoaderFunctionArgs } from "react-router";
-import { drizzle } from "drizzle-orm/d1";
+import { getDb } from "~/db/db.server";
 import * as schema from "~/db/schema";
 import { eq, count, and } from "drizzle-orm";
 
@@ -11,7 +11,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
     return redirect("/login");
   }
 
-  const db = drizzle(env.DB, { schema });
+  const db = getDb(env);
 
   // Parallel data fetching as per 05-RESEARCH.md
   const [progress, certificates, courseCountResult] = await Promise.all([
