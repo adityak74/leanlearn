@@ -13,6 +13,24 @@
 
 ---
 
+## 📸 Preview
+
+<div align="center">
+  <img src="public/screenshots/get_started.png" alt="Get Started" width="800">
+  <br>
+  <em>Get Started with leanlearn</em>
+  <br><br>
+  <img src="public/screenshots/dashboard.png" alt="Dashboard" width="800">
+  <br>
+  <em>Intuitive Student Dashboard</em>
+  <br><br>
+  <img src="public/screenshots/sign_in.png" alt="Sign In" width="400">
+  <br>
+  <em>Secure Authentication</em>
+</div>
+
+---
+
 ## ✨ Key Features
 
 - **🔐 Robust Authentication:** Secure Google OAuth integration powered by Better Auth.
